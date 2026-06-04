@@ -1,0 +1,35 @@
+{% extends "members/master.html" %}
+
+{% block page_title %} Schedule{% endblock %}
+
+{% block content %}
+  <div class="content-box">
+    <h2>Upcoming Sessions</h2>
+    {% if sessions %}
+      <ul>
+        {% for session in sessions %}
+          <li>
+            <strong>{{ session.title }}</strong>
+            {% if session.type == 'match' %}
+              <span style="color: #0d47a1; margin-left: 10px;"> Match</span>
+            {% elif session.type == 'training' %}
+              <span style="color: #2ecc71; margin-left: 10px;"> Training</span>
+            {% else %}
+              <span style="color: orange; margin-left: 10px;"> Event</span>
+            {% endif %}
+            <br>
+            <span style="color: #999; font-size: 15px;">
+               {{ session.date }} &nbsp;  {{ session.time }}
+              {% if session.location %} &nbsp;  {{ session.location }}{% endif %}
+            </span>
+            {% if session.notes %}
+              <br><span style="color: #aaa; font-size: 14px;">{{ session.notes }}</span>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No sessions scheduled yet. Add them via the Admin panel.</p>
+    {% endif %}
+  </div>
+{% endblock %}

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - Tennis Club</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #1a1a2e;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: #16213e;
+            padding: 40px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 420px;
+            border-top: 5px solid #e94560;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #e94560;
+            font-size: 28px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .logo p {
+            color: #888;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            color: #ffffff;
+            font-size: 20px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        label {
+            color: #aaa;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            background: #0f3460;
+            border: 1px solid #0f3460;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 15px;
+            margin-bottom: 18px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #e94560;
+        }
+
+        ul.errorlist {
+            color: #e94560;
+            font-size: 12px;
+            margin-bottom: 10px;
+            padding-left: 15px;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .toggle-eye {
+            position: absolute;
+            right: 14px;
+            top: 13px;
+            cursor: pointer;
+            color: #888;
+            font-size: 18px;
+            user-select: none;
+        }
+
+        .toggle-eye:hover {
+            color: #e94560;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            background: #e94560;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        button[type="submit"]:hover {
+            background: #c73652;
+        }
+
+        .forgot-link {
+            text-align: right;
+            margin-bottom: 18px;
+        }
+
+        .forgot-link a {
+            color: #e94560;
+            font-size: 12px;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+
+        .forgot-link a:hover {
+            text-decoration: underline;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #888;
+            font-size: 13px;
+        }
+
+        .register-link a {
+            color: #e94560;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>Tennis Club</h1>
+            <p>Member Portal</p>
+        </div>
+        <h2>Welcome Back</h2>
+
+        {% if form.errors %}
+        <ul class="errorlist">
+            <li>Please enter a correct username and password. Note that both fields may be case-sensitive.</li>
+        </ul>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <label for="id_username">Username:</label>
+            <input type="text" id="id_username" name="username" autofocus>
+
+            <label for="id_password">Password:</label>
+            <div class="password-wrapper">
+                <input type="password" id="id_password" name="password">
+                <span class="toggle-eye" onclick="togglePassword()">👁</span>
+            </div>
+
+            <div class="forgot-link">
+                <a href="/accounts/password_reset/">Forgot your password?</a>
+            </div>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="register-link">
+            Don't have an account? <a href="/members/register/">Register here</a>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            var input = document.getElementById('id_password');
+            var eye = document.querySelector('.toggle-eye');
+            if (input.type === 'password') {
+                input.type = 'text';
+                eye.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                eye.textContent = '👁';
+            }
+        }
+    </script>
+</body>
+</html>

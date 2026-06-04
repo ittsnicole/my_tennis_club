@@ -1,0 +1,17 @@
+{% extends "members/master.html" %}
+
+{% block page_title %}Delete Member{% endblock %}
+
+{% block content %}
+  <div class="content-box" style="max-width: 500px; margin: 0 auto; text-align: center;">
+    <h2 style="color: red;"> Delete Member</h2>
+    <p style="margin: 20px 0;">Are you sure you want to delete <strong>{{ member.firstname }} {{ member.lastname }}</strong>? This cannot be undone.</p>
+    <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
+      <a href="/members/" style="background: #ccc; color: #333; padding: 12px 25px; border-radius: 8px; font-size: 16px;">Cancel</a>
+      <form method="POST" action="{% url 'delete' member.id %}">
+        {% csrf_token %}
+        <input type="submit" value="Yes, Delete" style="background: red; color: white; padding: 12px 25px; border-radius: 8px; font-size: 16px; border: none; cursor: pointer;">
+      </form>
+    </div>
+  </div>
+{% endblock %}

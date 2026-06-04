@@ -1,0 +1,35 @@
+{% extends "members/master.html" %}
+
+{% block page_title %} Membership{% endblock %}
+
+{% block content %}
+  <div class="content-box">
+    <h2>Membership Status</h2>
+    {% if memberships %}
+      <ul>
+        {% for m in memberships %}
+          <li>
+            <strong>{{ m.member.firstname }} {{ m.member.lastname }}</strong>
+            {% if m.type == 'vip' %}
+              <span style="color: gold; margin-left: 10px;"> VIP</span>
+            {% elif m.type == 'junior' %}
+              <span style="color: #2ecc71; margin-left: 10px;"> Junior</span>
+            {% else %}
+              <span style="color: #0d47a1; margin-left: 10px;"> Adult</span>
+            {% endif %}
+            {% if m.active %}
+              <span style="color: #2ecc71; margin-left: 10px;"> Active</span>
+            {% else %}
+              <span style="color: red; margin-left: 10px;"> Inactive</span>
+            {% endif %}
+            {% if m.expiry_date %}
+              <br><span style="color: #999; font-size: 15px;">Expires: {{ m.expiry_date }}</span>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No memberships added yet. Add them via the Admin panel.</p>
+    {% endif %}
+  </div>
+{% endblock %}

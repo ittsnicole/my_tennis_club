@@ -1,0 +1,370 @@
+{% extends "members/master.html" %}
+
+{% block tab_title %}Add Payment{% endblock %}
+{% block page_title %}Add Payment{% endblock %}
+
+{% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  .ap-page {
+    display: flex;
+    justify-content: center;
+    padding: 2.5rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .ap-card {
+    width: 100%;
+    max-width: 560px;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 8px 32px rgba(0,0,0,0.08);
+    animation: apSlideUp 0.35s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  @keyframes apSlideUp {
+    from { opacity:0; transform:translateY(18px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  /* Header */
+  .ap-header {
+    background: #12122a;
+    padding: 1.4rem 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .ap-header-left { display:flex; align-items:center; gap:12px; }
+
+  .ap-hicon {
+    width:36px; height:36px;
+    background: rgba(255,255,255,0.09);
+    border-radius: 9px;
+    display: flex; align-items:center; justify-content:center;
+  }
+
+  .ap-hicon svg {
+    width:17px; height:17px; stroke:#b8b4f0;
+    fill:none; stroke-width:1.8;
+    stroke-linecap:round; stroke-linejoin:round;
+  }
+
+  .ap-header h2 {
+    color: #eeeeff;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    margin: 0;
+  }
+
+  .ap-clock {
+    color: #6a68a0;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  /* Body */
+  .ap-body {
+    padding: 1.75rem 1.75rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  /* Field */
+  .ap-field { display:flex; flex-direction:column; gap:6px; }
+
+  .ap-field label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: #999;
+  }
+
+  .ap-field select,
+  .ap-field input[type="text"] {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #e2e0db;
+    border-radius: 10px;
+    background: #faf9f7;
+    color: #1a1a2e;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .ap-field select:focus,
+  .ap-field input[type="text"]:focus {
+    border-color: #6c63d0;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(108,99,208,0.12);
+  }
+
+  .ap-select-wrap { position:relative; }
+
+  .ap-select-wrap::after {
+    content:'';
+    position:absolute; right:13px; top:50%;
+    transform:translateY(-50%);
+    width:0; height:0;
+    border-left:4px solid transparent;
+    border-right:4px solid transparent;
+    border-top:5px solid #aaa;
+    pointer-events:none;
+  }
+
+  .ap-select-wrap select { padding-right:34px; }
+
+  /* Amount prefix */
+  .ap-amount-wrap { position:relative; }
+
+  .ap-amount-prefix {
+    position:absolute; left:14px; top:50%;
+    transform:translateY(-50%);
+    font-size:11px; font-weight:600;
+    font-family:'DM Mono', monospace;
+    color:#aaa; letter-spacing:0.04em;
+    pointer-events:none;
+  }
+
+  .ap-amount-wrap input { padding-left:48px; }
+
+  /* Two-column row */
+  .ap-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  /* Status pills */
+  .ap-status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .ap-status-pill {
+    display: flex; align-items:center; gap:8px;
+    padding: 10px 14px;
+    border: 1px solid #e2e0db;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #999;
+    background: #faf9f7;
+    transition: all 0.15s;
+    user-select: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .ap-status-pill svg {
+    width:15px; height:15px;
+    fill:none; stroke-width:2.2;
+    stroke-linecap:round; stroke-linejoin:round;
+    stroke: #ccc;
+    flex-shrink:0;
+    transition: stroke 0.15s;
+  }
+
+  .ap-status-pill.is-paid  { border-color:#1d9e75; background:#edf9f4; color:#0d6e52; }
+  .ap-status-pill.is-paid svg { stroke:#1d9e75; }
+
+  .ap-status-pill.is-pending { border-color:#c77c14; background:#fef6e8; color:#8c5510; }
+  .ap-status-pill.is-pending svg { stroke:#c77c14; }
+
+  /* Divider */
+  .ap-divider { height:1px; background:#ece9e4; }
+
+  /* Footer */
+  .ap-footer {
+    padding: 1.25rem 1.75rem 1.75rem;
+    display: flex;
+    gap: 10px;
+  }
+
+  .ap-btn-submit {
+    flex:1;
+    padding: 11px 20px;
+    background: #12122a;
+    color: #eeeeff;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    display: flex; align-items:center; justify-content:center; gap:8px;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  .ap-btn-submit:hover  { background:#1e1e40; }
+  .ap-btn-submit:active { transform:scale(0.98); }
+
+  .ap-btn-submit svg {
+    width:15px; height:15px; stroke:#b8b4f0;
+    fill:none; stroke-width:2.5;
+    stroke-linecap:round; stroke-linejoin:round;
+  }
+
+  .ap-btn-back {
+    padding: 11px 16px;
+    background: transparent;
+    color: #999;
+    border: 1px solid #e2e0db;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex; align-items:center;
+    transition: all 0.15s;
+  }
+
+  .ap-btn-back:hover { background:#f4f3f0; color:#555; border-color:#ccc; }
+
+  @media (max-width: 480px) {
+    .ap-row { grid-template-columns:1fr; }
+    .ap-page { padding:1.5rem 0.5rem; }
+  }
+</style>
+
+<div class="ap-page">
+  <div class="ap-card">
+
+    <div class="ap-header">
+      <div class="ap-header-left">
+        <div class="ap-hicon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        </div>
+        <h2>Add Payment</h2>
+      </div>
+      <span class="ap-clock" id="ap-clock"></span>
+    </div>
+
+   <form method="post" action="{% url 'add_payment' %}">
+      {% csrf_token %}
+
+      <div class="ap-body">
+
+        <div class="ap-field">
+          <label for="ap-member">Member</label>
+          <div class="ap-select-wrap">
+            <select name="member" id="ap-member">
+              {% for m in members %}
+                <option value="{{ m.id }}">{{ m.firstname }} {{ m.lastname }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="ap-row">
+          <div class="ap-field">
+            <label for="ap-payment-type">Payment Type</label>
+            <div class="ap-select-wrap">
+              <select name="payment_type" id="ap-payment-type">
+                <option value="Membership Fee">Membership Fee</option>
+                <option value="Court Booking">Court Booking</option>
+                <option value="Training Fee">Training Fee</option>
+                <option value="Tournament Entry">Tournament Entry</option>
+                <option value="Equipment">Equipment</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="ap-field">
+            <label for="ap-method">Method</label>
+            <div class="ap-select-wrap">
+              <select name="method" id="ap-method">
+                <option value="M-Pesa">📱 M-Pesa</option>
+                <option value="Equity Bank">🏦 Equity Bank</option>
+                <option value="KCB">🏦 KCB</option>
+                <option value="Cooperative Bank">🏦 Cooperative Bank</option>
+                <option value="NCBA">🏦 NCBA</option>
+                <option value="Absa">🏦 Absa</option>
+                <option value="Visa Card">💳 Visa Card</option>
+                <option value="Mastercard">💳 Mastercard</option>
+                <option value="Cash">💵 Cash</option>
+                <option value="Bank Transfer">🔄 Bank Transfer</option>
+                <option value="Cheque">📄 Cheque</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="ap-field">
+          <label for="ap-amount">Amount (KES)</label>
+          <div class="ap-amount-wrap">
+            <span class="ap-amount-prefix"> KES </span>
+            <input type="text" name="amount" id="ap-amount" placeholder="e.g. 5000">
+          </div>
+        </div>
+
+        <div class="ap-field">
+          <label>Status</label>
+          <input type="hidden" name="status" id="ap-status" value="paid">
+          <div class="ap-status-grid">
+            <div class="ap-status-pill is-paid" id="ap-opt-paid" onclick="apSetStatus('paid')">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+              Paid
+            </div>
+            <div class="ap-status-pill" id="ap-opt-pending" onclick="apSetStatus('pending')">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Pending
+            </div>
+          </div>
+        </div>
+
+        <div class="ap-field">
+          <label for="ap-notes">Notes</label>
+          <input type="text" name="notes" id="ap-notes" placeholder="Optional notes">
+        </div>
+
+      </div>
+
+      <div class="ap-divider"></div>
+
+      <div class="ap-footer">
+        <a href="/members/payments/" class="ap-btn-back">← Back</a>
+        <button type="submit" class="ap-btn-submit">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Payment
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<script>
+  (function(){
+    function pad(n){ return String(n).padStart(2,'0'); }
+    function tick(){
+      var d=new Date(), h=d.getHours(), m=d.getMinutes(), s=d.getSeconds();
+      var ampm=h>=12?'PM':'AM'; h=h%12||12;
+      var el=document.getElementById('ap-clock');
+      if(el) el.textContent=h+':'+pad(m)+':'+pad(s)+' '+ampm;
+    }
+    tick(); setInterval(tick,1000);
+  })();
+
+  function apSetStatus(val){
+    document.getElementById('ap-status').value=val;
+    document.getElementById('ap-opt-paid').className='ap-status-pill'+(val==='paid'?' is-paid':'');
+    document.getElementById('ap-opt-pending').className='ap-status-pill'+(val==='pending'?' is-pending':'');
+  }
+</script>
+{% endblock %}

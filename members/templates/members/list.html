@@ -1,0 +1,389 @@
+{% extends "members/master.html" %}
+
+{% block tab_title %}All Members{% endblock %}
+{% block page_title %}All Members{% endblock %}
+
+{% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  .ml-page {
+    font-family: 'DM Sans', sans-serif;
+    padding: 2rem 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* ── Top bar ── */
+  .ml-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .ml-search-form {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+    min-width: 220px;
+    max-width: 420px;
+  }
+
+  .ml-search-wrap {
+    position: relative;
+    flex: 1;
+  }
+
+  .ml-search-wrap svg {
+    position: absolute;
+    left: 12px; top: 50%;
+    transform: translateY(-50%);
+    width: 15px; height: 15px;
+    stroke: #bbb; fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    pointer-events: none;
+  }
+
+  .ml-search-wrap input {
+    width: 100%;
+    padding: 9px 14px 9px 36px;
+    border: 1px solid #e2e0db;
+    border-radius: 10px;
+    background: #faf9f7;
+    color: #1a1a2e;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  }
+
+  .ml-search-wrap input:focus {
+    border-color: #6c63d0;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(108,99,208,0.12);
+  }
+
+  .ml-btn-search {
+    padding: 9px 18px;
+    background: #12122a;
+    color: #eeeeff;
+    border: none;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    transition: background 0.15s, transform 0.1s;
+    white-space: nowrap;
+  }
+
+  .ml-btn-search:hover  { background: #1e1e40; }
+  .ml-btn-search:active { transform: scale(0.98); }
+
+  .ml-btn-search svg {
+    width: 14px; height: 14px; stroke: #b8b4f0;
+    fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .ml-btn-add {
+    padding: 9px 16px;
+    background: #edf9f4;
+    color: #0d6e52;
+    border: 1px solid #a8e6d2;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    text-decoration: none;
+    display: flex; align-items: center; gap: 6px;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .ml-btn-add:hover { background: #d6f5ea; border-color: #1d9e75; }
+
+  .ml-btn-add svg {
+    width: 14px; height: 14px; stroke: #1d9e75;
+    fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  /* ── Card + table ── */
+  .ml-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 8px 32px rgba(0,0,0,0.07);
+    animation: mlFadeUp 0.35s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  @keyframes mlFadeUp {
+    from { opacity:0; transform:translateY(14px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  /* Card header */
+  .ml-card-header {
+    background: #12122a;
+    padding: 1.1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .ml-card-header-left {
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .ml-card-hicon {
+    width: 32px; height: 32px;
+    background: rgba(255,255,255,0.09);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .ml-card-hicon svg {
+    width: 15px; height: 15px; stroke: #b8b4f0;
+    fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .ml-card-header h3 {
+    color: #eeeeff;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: 0.01em;
+  }
+
+  .ml-count-badge {
+    background: rgba(255,255,255,0.1);
+    color: #b8b4f0;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.04em;
+  }
+
+  /* Table */
+  .ml-table-wrap { overflow-x: auto; }
+
+  .ml-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+
+  .ml-table thead tr {
+    background: #f7f6f3;
+    border-bottom: 1px solid #ece9e4;
+  }
+
+  .ml-table thead th {
+    padding: 10px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #aaa;
+    white-space: nowrap;
+  }
+
+  .ml-table thead th:first-child { width: 48px; }
+
+  .ml-table tbody tr {
+    border-bottom: 1px solid #f0ede8;
+    transition: background 0.1s;
+  }
+
+  .ml-table tbody tr:last-child { border-bottom: none; }
+  .ml-table tbody tr:hover { background: #faf9f7; }
+
+  .ml-table tbody td {
+    padding: 12px 16px;
+    color: #2a2a3e;
+    vertical-align: middle;
+  }
+
+  /* ID cell */
+  .ml-id {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: #bbb;
+  }
+
+  /* Name cells */
+  .ml-name-first { font-weight: 500; color: #1a1a2e; }
+
+  /* Phone */
+  .ml-phone {
+    font-family: 'DM Mono', monospace;
+    font-size: 12.5px;
+    color: #666;
+  }
+
+  /* Date */
+  .ml-date {
+    font-size: 12.5px;
+    color: #888;
+  }
+
+  /* Action buttons */
+  .ml-actions { display: flex; gap: 6px; align-items: center; }
+
+  .ml-btn-view,
+  .ml-btn-edit {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 11px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    text-decoration: none;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .ml-btn-view {
+    background: #f0eeff;
+    color: #5048b8;
+    border: 1px solid #d4d0f5;
+  }
+
+  .ml-btn-view:hover { background: #e4e0ff; border-color: #9f99e8; }
+
+  .ml-btn-edit {
+    background: #fef6e8;
+    color: #8c5510;
+    border: 1px solid #f5d9a0;
+  }
+
+  .ml-btn-edit:hover { background: #fdecd0; border-color: #c77c14; }
+
+  .ml-btn-view svg,
+  .ml-btn-edit svg {
+    width: 12px; height: 12px; fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    flex-shrink: 0;
+  }
+
+  .ml-btn-view svg { stroke: #6c63d0; }
+  .ml-btn-edit svg { stroke: #c77c14; }
+
+  /* Empty state */
+  .ml-empty {
+    padding: 3rem 1.5rem;
+    text-align: center;
+    color: #bbb;
+    font-size: 14px;
+  }
+
+  .ml-empty svg {
+    width: 40px; height: 40px; stroke: #ddd;
+    fill: none; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round;
+    display: block; margin: 0 auto 1rem;
+  }
+
+  .ml-empty strong { display: block; color: #aaa; font-size: 15px; margin-bottom: 4px; }
+
+  @media (max-width: 560px) {
+    .ml-topbar { flex-direction: column; align-items: stretch; }
+    .ml-search-form { max-width: 100%; }
+    .ml-btn-add { justify-content: center; }
+    .ml-table thead th:nth-child(4),
+    .ml-table tbody td:nth-child(4) { display: none; }
+  }
+</style>
+
+<div class="ml-page">
+
+  <!-- Top bar: search + add button -->
+  <div class="ml-topbar">
+    <form method="GET" action="{% url 'members_list' %}" class="ml-search-form">
+      <div class="ml-search-wrap">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+        <input type="text" name="search" placeholder="Search by name…" value="{{ query }}">
+      </div>
+      <button type="submit" class="ml-btn-search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+        Search
+      </button>
+    </form>
+
+    <a href="/members/add/" class="ml-btn-add">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Member
+    </a>
+  </div>
+
+  <!-- Table card -->
+  <div class="ml-card">
+
+    <div class="ml-card-header">
+      <div class="ml-card-header-left">
+        <div class="ml-card-hicon">
+          <svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M2 21c0-4 3.1-7 7-7"/><circle cx="17" cy="15" r="4"/><path d="M13 21c0-2.2 1.8-4 4-4s4 1.8 4 4"/></svg>
+        </div>
+        <h3>All Members</h3>
+      </div>
+      <span class="ml-count-badge">{{ mymembers|length }} member{{ mymembers|length|pluralize }}</span>
+    </div>
+
+    {% if mymembers %}
+    <div class="ml-table-wrap">
+      <table class="ml-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Phone</th>
+            <th>Joined Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for x in mymembers %}
+          <tr>
+            <td class="ml-id">{{ x.id }}</td>
+            <td class="ml-name-first">{{ x.firstname }}</td>
+            <td>{{ x.lastname }}</td>
+            <td class="ml-phone">{{ x.phone|default:"—" }}</td>
+            <td class="ml-date">{{ x.joined_date|default:"—" }}</td>
+            <td>
+              <div class="ml-actions">
+                <a class="ml-btn-view" href="{% url 'details' x.id %}">
+                  <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  View
+                </a>
+                <a class="ml-btn-edit" href="{% url 'edit' x.id %}">
+                  <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  Edit
+                </a>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% else %}
+    <div class="ml-empty">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><line x1="8" y1="12" x2="16" y2="12" stroke-dasharray="2 2"/></svg>
+      <strong>No members found</strong>
+      {% if query %}No results for "{{ query }}" — try a different name.{% else %}Add your first member to get started.{% endif %}
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

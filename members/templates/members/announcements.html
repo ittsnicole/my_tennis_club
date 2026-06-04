@@ -1,0 +1,27 @@
+{% extends "members/master.html" %}
+
+{% block page_title %} Announcements{% endblock %}
+
+{% block content %}
+  <div class="content-box">
+    <h2>Club Announcements</h2>
+    {% if announcements %}
+      <ul>
+        {% for a in announcements %}
+          <li>
+            {% if a.important %}
+              <span style="color: red; font-size: 13px; font-weight: bold;">🔴 IMPORTANT</span><br>
+            {% endif %}
+            <strong>{{ a.title }}</strong>
+            <br>
+            <span style="color: #444; font-size: 16px;">{{ a.message }}</span>
+            <br>
+            <span style="color: #999; font-size: 14px;">Posted: {{ a.date_posted }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No announcements yet. Add them via the Admin panel.</p>
+    {% endif %}
+  </div>
+{% endblock %}

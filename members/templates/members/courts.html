@@ -1,0 +1,30 @@
+{% extends "members/master.html" %}
+
+{% block page_title %} Courts{% endblock %}
+
+{% block content %}
+  <div class="content-box">
+    <h2>Court Status</h2>
+    {% if courts %}
+      <ul>
+        {% for court in courts %}
+          <li>6
+            <strong>{{ court.name }}</strong>
+            {% if court.status == 'available' %}
+              <span style="color: #2ecc71; margin-left: 10px;"> Available</span>
+            {% elif court.status == 'booked' %}
+              <span style="color: orange; margin-left: 10px;"> Booked</span>
+            {% else %}
+              <span style="color: red; margin-left: 10px;"> Under Maintenance</span>
+            {% endif %}
+            {% if court.notes %}
+              <span style="color: #999; font-size: 15px; margin-left: 10px;">— {{ court.notes }}</span>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No courts added yet. Add them via the Admin panel.</p>
+    {% endif %}
+  </div>
+{% endblock %}

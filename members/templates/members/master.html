@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+    {% block tab_title %}Dashboard{% endblock %} — My Tennis Club
+    </title>
+ 
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+ 
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+ 
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: #f6f3ff;
+            min-height: 100vh;
+        }
+ 
+        .wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+ 
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #8b5cf6 0%, #ec4899 100%);
+            position: fixed;
+            top: 0; 
+            left: 0;
+            height: 100vh;
+            padding: 20px 0;
+            border-top-right-radius: 30px;
+            border-bottom-right-radius: 30px;
+            overflow-y: auto;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+ 
+        .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            padding: 15px 20px 25px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+ 
+        /* Standalone Links */
+        .sidebar > a {
+            display: flex;
+            align-items: center;
+            padding: 14px 20px;
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+ 
+        .sidebar > a:hover,
+        .sidebar > a.active {
+            background: rgba(255,255,255,0.18);
+            color: white;
+            border-left: 4px solid #2ecc71;
+        }
+ 
+        /* Nav Groups */
+        .nav-group-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 14px 20px;
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.85);
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            border-left: 4px solid transparent;
+        }
+ 
+        .nav-group-btn:hover {
+            background: rgba(255,255,255,0.15);
+            color: white;
+        }
+ 
+        .nav-group-btn.open {
+            background: rgba(255,255,255,0.12);
+            color: white;
+        }
+ 
+        .nav-group-btn .arrow {
+            transition: transform 0.3s ease;
+        }
+ 
+        .nav-group-btn.open .arrow {
+            transform: rotate(180deg);
+        }
+ 
+        .nav-group-items {
+            display: none;
+            background: rgba(0,0,0,0.15);
+        }
+ 
+        .nav-group-items.open {
+            display: block;
+        }
+ 
+        .nav-group-items a {
+            display: flex;
+            align-items: center;
+            padding: 11px 20px 11px 40px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 16.5px;
+            transition: all 0.3s ease;
+        }
+ 
+        .nav-group-items a:hover,
+        .nav-group-items a.active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-left: 4px solid #2ecc71;
+        }
+ 
+        .sidebar i { 
+            margin-right: 10px; 
+            width: 20px;
+        }
+ 
+        /* Main Content */
+        .main {
+            margin-left: 260px;
+            flex: 1;
+            padding: 30px;
+        }
+ 
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+ 
+        .topbar h1 { 
+            font-size: 30px; 
+            color: #0a1628; 
+        }
+ 
+        #clock { 
+            font-size: 18px; 
+            color: #0d47a1; 
+            font-weight: 500;
+        }
+ 
+        /* Other styles (your existing ones) */
+        .content-box, .card, .profile-card {
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+ 
+        button[type="submit"] {
+            background: linear-gradient(135deg, #0d47a1, #1a73e8);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 17px;
+            font-family: inherit;
+        }
+ 
+        button[type="submit"]:hover { 
+            opacity: 0.9; 
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+ 
+<body>
+<div class="wrapper">
+ 
+    <div class="sidebar">
+        <div class="logo">My Tennis Club</div>
+ 
+        <!-- Dashboard -->
+        <a href="/members/" {% if request.path == '/members/' %}class="active"{% endif %}>
+            <i class="fas fa-house"></i> Dashboard
+        </a>
+ 
+        <!-- Members Group -->
+        <div class="nav-group">
+            <button class="nav-group-btn {% if request.path == '/members/list/' or request.path == '/members/add/' or request.path == '/members/membership/' or request.path == '/members/stats/' %}open{% endif %}"
+                onclick="toggleGroup(this)">
+                <span><i class="fas fa-users"></i> Members</span>
+                <i class="fas fa-chevron-down arrow"></i>
+            </button>
+            <div class="nav-group-items {% if request.path == '/members/list/' or request.path == '/members/add/' or request.path == '/members/membership/' or request.path == '/members/stats/' %}open{% endif %}">
+                <a href="/members/list/" {% if request.path == '/members/list/' %}class="active"{% endif %}>
+                    <i class="fas fa-list"></i> All Members
+                </a>
+                <a href="/members/add/" {% if request.path == '/members/add/' %}class="active"{% endif %}>
+                    <i class="fas fa-user-plus"></i> Add Member
+                </a>
+                <a href="/members/membership/" {% if request.path == '/members/membership/' %}class="active"{% endif %}>
+                    <i class="fas fa-id-card"></i> Membership
+                </a>
+                <a href="/members/stats/" {% if request.path == '/members/stats/' %}class="active"{% endif %}>
+                    <i class="fas fa-chart-line"></i> Statistics
+                </a>
+            </div>
+        </div>
+ 
+        <!-- Facilities Group -->
+        <div class="nav-group">
+            <button class="nav-group-btn {% if request.path == '/members/courts/' or request.path == '/members/schedule/' %}open{% endif %}"
+                onclick="toggleGroup(this)">
+                <span><i class="fas fa-table-tennis-paddle-ball"></i> Facilities</span>
+                <i class="fas fa-chevron-down arrow"></i>
+            </button>
+            <div class="nav-group-items {% if request.path == '/members/courts/' or request.path == '/members/schedule/' %}open{% endif %}">
+                <a href="/members/courts/" {% if request.path == '/members/courts/' %}class="active"{% endif %}>
+                    <i class="fas fa-table-tennis-paddle-ball"></i> Courts
+                </a>
+                <a href="/members/schedule/" {% if request.path == '/members/schedule/' %}class="active"{% endif %}>
+                    <i class="fas fa-calendar"></i> Schedule
+                </a>
+            </div>
+        </div>
+ 
+        <!-- Finance Group -->
+        <div class="nav-group">
+            <button class="nav-group-btn {% if request.path == '/members/payments/' %}open{% endif %}"
+                onclick="toggleGroup(this)">
+                <span><i class="fas fa-dollar-sign"></i> Finance</span>
+                <i class="fas fa-chevron-down arrow"></i>
+            </button>
+            <div class="nav-group-items {% if request.path == '/members/payments/' %}open{% endif %}">
+                <a href="/members/payments/" {% if request.path == '/members/payments/' %}class="active"{% endif %}>
+                    <i class="fas fa-money-bill-wave"></i> Payments
+                </a>
+            </div>
+        </div>
+ 
+        <!-- Standalone -->
+        <a href="/members/announcements/" {% if request.path == '/members/announcements/' %}class="active"{% endif %}>
+            <i class="fas fa-bullhorn"></i> Announcements
+        </a>
+ 
+        <a href="/members/about/" {% if request.path == '/members/about/' %}class="active"{% endif %}>
+            <i class="fas fa-circle-inf
+            o"></i> About
+        </a>
+ 
+        <a href="/admin/">
+            <i class="fas fa-cog"></i> Admin Panel
+        </a>
+    </div>
+ 
+    <div class="main">
+        <div class="topbar">
+            <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+            <span id="clock"></span>
+        </div>
+ 
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}{{ message }}{% endfor %}
+            </div>
+        {% endif %}
+ 
+        {% block content %}{% endblock %}
+    </div>
+</div>
+ 
+<footer style="margin-left: 260px; padding: 20px; text-align: center; color: #666;">
+    <p>&copy; {% now "Y" %} My Tennis Club. All rights reserved.</p>
+</footer>
+ 
+<script>
+    // Clock
+    function updateClock() {
+        document.getElementById("clock").textContent = new Date().toLocaleTimeString('en-US', {hour12: true});
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Toggle dropdown groups
+    function toggleGroup(btn) {
+        btn.classList.toggle("open");
+        const items = btn.nextElementSibling;
+        items.classList.toggle("open");
+    }
+</script>
+ 
+</body>
+</html>

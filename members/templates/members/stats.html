@@ -1,0 +1,264 @@
+{% extends "members/master.html" %}
+
+{% block tab_title %}Statistics{% endblock %}
+{% block page_title %}Statistics{% endblock %}
+
+{% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  .st-page {
+    font-family: 'DM Sans', sans-serif;
+    padding: 2rem 1rem;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  /* ── Metric cards row ── */
+  .st-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 1.5rem;
+  }
+
+  .st-metric {
+    background: #fff;
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    animation: stFade 0.4s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  .st-metric:nth-child(2) { animation-delay: 0.06s; }
+  .st-metric:nth-child(3) { animation-delay: 0.12s; }
+
+  @keyframes stFade {
+    from { opacity:0; transform:translateY(12px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  .st-metric-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 4px;
+  }
+
+  .st-metric-icon svg {
+    width: 16px; height: 16px;
+    fill: none; stroke-width: 1.8;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .st-metric-icon.teal   { background: #e1f5ee; }
+  .st-metric-icon.teal svg { stroke: #1d9e75; }
+  .st-metric-icon.purple { background: #eeeeff; }
+  .st-metric-icon.purple svg { stroke: #6c63d0; }
+  .st-metric-icon.amber  { background: #fef6e8; }
+  .st-metric-icon.amber svg { stroke: #c77c14; }
+
+  .st-metric-value {
+    font-size: 32px;
+    font-weight: 600;
+    color: #12122a;
+    line-height: 1;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .st-metric-label {
+    font-size: 12px;
+    color: #aaa;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+
+  /* ── Member spotlight cards ── */
+  .st-spotlights {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .st-spotlight {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.06);
+    animation: stFade 0.4s cubic-bezier(0.16,1,0.3,1) 0.18s both;
+  }
+
+  .st-spotlight:nth-child(2) { animation-delay: 0.24s; }
+
+  .st-spotlight-header {
+    background: #12122a;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .st-spotlight-hicon {
+    width: 30px; height: 30px;
+    background: rgba(255,255,255,0.09);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .st-spotlight-hicon svg {
+    width: 14px; height: 14px; stroke: #b8b4f0;
+    fill: none; stroke-width: 1.8;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .st-spotlight-header h3 {
+    color: #eeeeff;
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: 0.01em;
+  }
+
+  .st-spotlight-body {
+    padding: 1.25rem;
+  }
+
+  .st-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    flex-shrink: 0;
+  }
+
+  .st-avatar.teal   { background: #e1f5ee; color: #0d6e52; }
+  .st-avatar.purple { background: #eeeeff; color: #4a42a8; }
+
+  .st-member-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #12122a;
+    margin: 0 0 4px;
+  }
+
+  .st-member-date {
+    font-size: 12px;
+    color: #aaa;
+    font-family: 'DM Mono', monospace;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .st-member-date svg {
+    width: 12px; height: 12px; stroke: #ccc;
+    fill: none; stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round;
+    flex-shrink: 0;
+  }
+
+  .st-empty {
+    font-size: 13px;
+    color: #bbb;
+    padding: 0.5rem 0;
+  }
+
+  @media (max-width: 560px) {
+    .st-metrics    { grid-template-columns: 1fr 1fr; }
+    .st-spotlights { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 360px) {
+    .st-metrics { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="st-page">
+
+  <!-- Metric cards -->
+  <div class="st-metrics">
+    <div class="st-metric">
+      <div class="st-metric-icon teal">
+        <svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M2 21c0-4 3.1-7 7-7"/><circle cx="17" cy="11" r="3"/><path d="M14 21c0-2.8 1.3-5 3-5s3 2.2 3 5"/></svg>
+      </div>
+      <span class="st-metric-value">{{ total }}</span>
+      <span class="st-metric-label">Total Members</span>
+    </div>
+
+    <div class="st-metric">
+      <div class="st-metric-icon purple">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+      <span class="st-metric-value">{{ this_year }}</span>
+      <span class="st-metric-label">Joined This Year</span>
+    </div>
+
+    <div class="st-metric">
+      <div class="st-metric-icon amber">
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.86 19.86 0 0 1 3.09 4.18 2 2 0 0 1 5.07 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L9.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/><line x1="18" y1="2" x2="22" y2="6" stroke-dasharray="2 2"/></svg>
+      </div>
+      <span class="st-metric-value">{{ no_phone }}</span>
+      <span class="st-metric-label">No Phone Number</span>
+    </div>
+  </div>
+
+  <!-- Spotlight cards -->
+  <div class="st-spotlights">
+
+    <div class="st-spotlight">
+      <div class="st-spotlight-header">
+        <div class="st-spotlight-hicon">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <h3>Newest Member</h3>
+      </div>
+      <div class="st-spotlight-body">
+        {% if newest %}
+          <div class="st-avatar teal">
+            {{ newest.firstname|first }}{{ newest.lastname|first }}
+          </div>
+          <p class="st-member-name">{{ newest.firstname }} {{ newest.lastname }}</p>
+          <span class="st-member-date">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+            Joined {{ newest.joined_date }}
+          </span>
+        {% else %}
+          <p class="st-empty">No members yet.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="st-spotlight">
+      <div class="st-spotlight-header">
+        <div class="st-spotlight-hicon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>Longest Standing Member</h3>
+      </div>
+      <div class="st-spotlight-body">
+        {% if oldest %}
+          <div class="st-avatar purple">
+            {{ oldest.firstname|first }}{{ oldest.lastname|first }}
+          </div>
+          <p class="st-member-name">{{ oldest.firstname }} {{ oldest.lastname }}</p>
+          <span class="st-member-date">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+            Joined {{ oldest.joined_date }}
+          </span>
+        {% else %}
+          <p class="st-empty">No members yet.</p>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

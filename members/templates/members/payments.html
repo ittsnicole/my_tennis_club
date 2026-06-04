@@ -1,0 +1,53 @@
+{% extends "members/master.html" %}
+
+{% block tab_title %}Payments{% endblock %}
+{% block page_title %}Payments{% endblock %}
+
+{% block content %}
+
+<div class="content-box">
+
+    <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+        <h2>Payments</h2>
+
+        <a href="/members/payments/add/">
+            <button>
+                <i class="fas fa-plus"></i>
+                Add Payment
+            </button>
+        </a>
+    </div>
+
+    {% if payments %}
+
+    <table width="100%" cellpadding="12">
+
+        <tr style="background:#f0f4ff;">
+            <th>Member</th>
+            <th>Type</th>
+            <th>Method</th>
+            <th>Amount</th>
+            <th>Status</th>
+        </tr>
+
+        {% for payment in payments %}
+        <tr>
+            <td>{{ payment.member }}</td>
+            <td>{{ payment.payment_type }}</td>
+            <td>{{ payment.method }}</td>
+            <td>KES {{ payment.amount }}</td>
+            <td>{{ payment.status }}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    {% else %}
+
+    <p>No payments yet.</p>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

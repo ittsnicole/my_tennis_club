@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+  <title>Register - Tennis Club</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Cormorant Garamond', serif;
+      background: #e2d8d8;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      background: rgb(117, 4, 4);
+      padding: 40px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 4px 15px rgba(112, 14, 14, 0.37);
+      border-top: 5px solid #06306e;
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .logo h1 {
+      color: #0a1628;
+      font-size: 30px;
+      font-weight: 600;
+      letter-spacing: 2px;
+    }
+    .logo p {
+      color: #888;
+      font-size: 17px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    h2 {
+      color: #0a1628;
+      font-size: 25px;
+      margin-bottom: 25px;
+      letter-spacing: 1px;
+    }
+    label {
+      color: #130101;
+      font-size: 19px;
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #c5d8ff;
+      border-radius: 8px;
+      color: #0a1628;
+      font-size: 16px;
+      font-family: 'Cormorant Garamond', serif;
+      margin-bottom: 18px;
+      outline: none;
+      transition: border 0.3s;
+    }
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      border-color: #0d47a1;
+    }
+    .helptext {
+      color: #140404;
+      font-size: 15px;
+      margin-top: -14px;
+      margin-bottom: 14px;
+      display: block;
+    }
+    ul.errorlist {
+      color: rgba(114, 9, 9, 0.466);
+      font-size: 13px;
+      margin-bottom: 10px;
+      padding-left: 15px;
+    }
+    button[type="submit"] {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #0d47a1, #0a1628);
+      color: rgba(19, 6, 6, 0.527);
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-family: 'Cormorant Garamond', serif;
+      cursor: pointer;
+      margin-top: 10px;
+      letter-spacing: 1px;
+      transition: opacity 0.3s;
+    }
+    button[type="submit"]:hover { opacity: 0.9; }
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+      color: #180404;
+      font-size: 15px;
+    }
+    .login-link a {
+      color: #0d47a1;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .login-link a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <h1>My Tennis Club</h1>
+      <p>Member Portal</p>
+    </div>
+    <h2>Create Account</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Register</button>
+</form>
+    <div class="login-link">
+        Already have an account? <a href="/accounts/login/">Login here</a>
+    </div>
+ </div>
+      
